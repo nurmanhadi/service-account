@@ -1,0 +1,10 @@
+CREATE TABLE nasabah (
+    id BIGSERIAL PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    nik VARCHAR(20) NOT NULL,
+    no_hp VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_nik UNIQUE(nik),
+    CONSTRAINT unique_no_hp UNIQUE(no_hp)
+);
