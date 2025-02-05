@@ -8,3 +8,13 @@ CREATE TABLE nasabah (
     CONSTRAINT unique_nik UNIQUE(nik),
     CONSTRAINT unique_no_hp UNIQUE(no_hp)
 );
+CREATE TABLE rekening (
+    id BIGSERIAL PRIMARY KEY,
+    nasabah_id INTEGER NOT NULL,
+    no_rekening VARCHAR(20) NOT NULL,
+    saldo INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_no_rekening UNIQUE(no_rekening),
+    FOREIGN KEY(nasabah_id) REFERENCES nasabah(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
