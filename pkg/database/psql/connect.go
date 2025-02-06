@@ -19,7 +19,7 @@ func PsqlConnect() *sql.DB {
 	db.SetMaxIdleConns(config.Set.Db.ConnMaxIdletime)
 	db.SetMaxOpenConns(config.Set.Db.MaxOpenConns)
 	db.SetConnMaxIdleTime(time.Minute * time.Duration(config.Set.Db.ConnMaxIdletime))
-	db.SetConnMaxLifetime(time.Hour * time.Duration(config.Set.Db.ConnMaxLifetime))
+	db.SetConnMaxLifetime(time.Minute * time.Duration(config.Set.Db.ConnMaxLifetime))
 
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
