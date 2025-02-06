@@ -2,7 +2,6 @@ package nasabah
 
 import (
 	"fmt"
-	"math/rand/v2"
 	"service-account/internal/rekening"
 	"service-account/pkg/dto"
 	"service-account/pkg/exception"
@@ -15,7 +14,7 @@ import (
 )
 
 type NasabahService interface {
-	Daftar(req *dto.NasabahRequestDto) (map[string]interface{}, error)
+	Daftar(req *dto.NasabahRequestDto, requestId *string) (map[string]interface{}, error)
 }
 type nasabahServiceImpl struct {
 	nasabahRepository  NasabahRepository
@@ -27,32 +26,32 @@ type nasabahServiceImpl struct {
 func NewNasabahService(nasabahRepository *NasabahRepository, rekeningRepository *rekening.RekeningRepository, validation *validator.Validate, logger *logrus.Logger) NasabahService {
 	return &nasabahServiceImpl{nasabahRepository: *nasabahRepository, rekeningRepository: *rekeningRepository, validation: validation, logger: logger}
 }
-func (s *nasabahServiceImpl) Daftar(req *dto.NasabahRequestDto) (map[string]interface{}, error) {
+func (s *nasabahServiceImpl) Daftar(req *dto.NasabahRequestDto, requestId *string) (map[string]interface{}, error) {
 	if err := s.validation.Struct(req); err != nil {
 		s.logger.WithFields(logrus.Fields{
-			"id":    rand.Int64N(99999999999),
-			"data":  req,
-			"task":  "validation",
-			"error": validation.ValidationError(err),
+			"request_id": requestId,
+			"data":       req,
+			"task":       "validation",
+			"error":      validation.ValidationError(err),
 		}).Error("validation error")
 		return nil, err
 	}
 	countNasabah, err := s.nasabahRepository.Count(&req.Nik, &req.NoHp)
 	if err != nil {
 		s.logger.WithFields(logrus.Fields{
-			"id":    rand.Int64N(99999999999),
-			"data":  fmt.Sprintf("%s, %s", req.Nik, req.NoHp),
-			"task":  "count nasabah to database",
-			"error": err,
-		}).Fatal("count error")
+			"request_id": requestId,
+			"data":       fmt.Sprintf("%s, %s", req.Nik, req.NoHp),
+			"task":       "count nasabah to database",
+			"error":      err.Error(),
+		}).Error("database error")
 		return nil, err
 	}
 	if countNasabah == 1 {
 		s.logger.WithFields(logrus.Fields{
-			"id":    rand.Int64N(99999999999),
-			"data":  fmt.Sprintf("%s, %s", req.Nik, req.NoHp),
-			"task":  "count nasabah",
-			"error": "nik atau no hp sudah terdaftar",
+			"request_id": requestId,
+			"data":       fmt.Sprintf("%s, %s", req.Nik, req.NoHp),
+			"task":       "count nasabah",
+			"error":      exception.NasabahCountAlreadyExist,
 		}).Error("exist")
 		return nil, exception.NasabahCountAlreadyExist
 	}
@@ -66,11 +65,11 @@ func (s *nasabahServiceImpl) Daftar(req *dto.NasabahRequestDto) (map[string]inte
 	nasabahId, err := s.nasabahRepository.Add(nasabah)
 	if err != nil {
 		s.logger.WithFields(logrus.Fields{
-			"id":    rand.Int64N(99999999999),
-			"data":  nasabah,
-			"task":  "add nasabah to database",
-			"error": err,
-		}).Fatal("database error")
+			"request_id": requestId,
+			"data":       nasabah,
+			"task":       "add nasabah to database",
+			"error":      err.Error(),
+		}).Error("database error")
 		return nil, err
 	}
 	noRekening := utils.GenerateRandomRekening()
@@ -83,11 +82,11 @@ func (s *nasabahServiceImpl) Daftar(req *dto.NasabahRequestDto) (map[string]inte
 	}
 	if err := s.rekeningRepository.Add(rekening); err != nil {
 		s.logger.WithFields(logrus.Fields{
-			"id":    rand.Int64N(99999999999),
-			"data":  rekening,
-			"task":  "add rekening to database",
-			"error": err,
-		}).Fatal("database error")
+			"request_id": requestId,
+			"data":       rekening,
+			"task":       "add rekening to database",
+			"error":      err.Error(),
+		}).Error("database error")
 		return nil, err
 	}
 	return map[string]interface{}{"no_rekening": noRekening}, nil

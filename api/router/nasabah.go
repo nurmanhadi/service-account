@@ -9,5 +9,5 @@ import (
 func NasabahRouter(app *fiber.App, u *handler.NasabahHandlerImpl) {
 	api := app.Group("/api/v1")
 	nasabah := api.Group("/nasabah")
-	nasabah.Post("/", u.Daftar)
+	nasabah.Post("/daftar", u.Daftar)
 }

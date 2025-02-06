@@ -20,6 +20,9 @@ func DependencyInjection(app *fiber.App) {
 	db := psql.PsqlConnect()
 
 	rekeningRepository := rekening.NewRekeningRepository(db, ctx)
+	rekeningService := rekening.NewRekeningService(&rekeningRepository, validation, logger)
+	rekeningHandler := handler.NewRekeningHandler(&rekeningService)
+	router.RekeningRouter(app, rekeningHandler)
 
 	nasabahRepository := nasabah.NewNasabahRepository(db, ctx)
 	nasabahService := nasabah.NewNasabahService(&nasabahRepository, &rekeningRepository, validation, logger)

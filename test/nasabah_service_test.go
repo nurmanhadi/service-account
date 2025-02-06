@@ -30,7 +30,8 @@ func TestNasabahDaftar(t *testing.T) {
 		NoHp: "1",
 	}
 
-	noRekening, err := serv.Daftar(req)
+	requestId := "123"
+	noRekening, err := serv.Daftar(req, &requestId)
 	if err != nil {
 		t.Error(err)
 	}

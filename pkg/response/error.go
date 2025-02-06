@@ -21,6 +21,10 @@ func ErrorResponse(c *fiber.Ctx, statusCode int, err string) error {
 func ResponseError(c *fiber.Ctx, err error) error {
 	if errors.Is(err, exception.NasabahCountAlreadyExist) {
 		return ErrorResponse(c, 400, err.Error())
+	} else if errors.Is(err, exception.RekeningNotFound) {
+		return ErrorResponse(c, 400, err.Error())
+	} else if errors.Is(err, exception.RekeningSaldoLessThan) {
+		return ErrorResponse(c, 400, err.Error())
 	} else if validationErr, ok := err.(validator.ValidationErrors); ok {
 		var values []string
 		for _, fieldErr := range validationErr {

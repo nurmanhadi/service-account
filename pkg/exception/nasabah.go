@@ -3,5 +3,5 @@ package exception
 import "errors"
 
 var (
-	NasabahCountAlreadyExist = errors.New("nik atau no hp sudah terdaftar")
+	NasabahCountAlreadyExist = errors.New("nik or no hp already exist")
 )

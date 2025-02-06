@@ -16,13 +16,14 @@ func NewNasabahHandler(nasabahService *nasabah.NasabahService) *NasabahHandlerIm
 	return &NasabahHandlerImpl{nasabahService: *nasabahService}
 }
 func (h *NasabahHandlerImpl) Daftar(c *fiber.Ctx) error {
+	requestId, _ := c.Locals("request_id").(string)
 	req := new(dto.NasabahRequestDto)
 	if err := c.BodyParser(&req); err != nil {
 		return response.ErrorResponse(c, 400, "cannot parse to json")
 	}
-	noRekening, err := h.nasabahService.Daftar(req)
+	result, err := h.nasabahService.Daftar(req, &requestId)
 	if err != nil {
 		return response.ResponseError(c, err)
 	}
-	return response.Success(c, 200, noRekening)
+	return response.Success(c, 200, result)
 }
