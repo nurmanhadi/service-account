@@ -1,5 +1,24 @@
 
 services:
+  service-account:
+    build: .
+    image: service-account:latest
+    container_name: service-account
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
+        limits:
+          cpus: "0.5"
+          memory: "256M"
   postgres:
     image: bitnami/postgresql:latest
     container_name: postgres

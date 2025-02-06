@@ -13,7 +13,7 @@ import (
 
 func TestNasabahAdd(t *testing.T) {
 	ctx := context.Background()
-	config.LoadConfig("../.env")
+	config.LoadConfig()
 	db := psql.PsqlConnect()
 	defer db.Close()
 	repo := nasabah.NewNasabahRepository(db, ctx)

@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	config.LoadConfig("./.env")
+	config.LoadConfig()
 	app := fiber.New(fiber.Config{
 		Prefork:               true,
 		CaseSensitive:         true,
@@ -26,7 +26,7 @@ func main() {
 	})
 	middleware.AppMiddleware(app)
 	container.DependencyInjection(app)
-	host := flag.String("host", "localhost", "REST API host")
+	host := flag.String("host", "0.0.0.0", "REST API host")
 	port := flag.Int("port", 8080, "REST API port")
 	flag.Parse()
 	fmt.Printf("Server running on %s:%d\n", *host, *port)

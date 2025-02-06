@@ -18,7 +18,7 @@ func TestNasabahDaftar(t *testing.T) {
 	loggger := logger.InitLogrus()
 	ctx := context.Background()
 	validation := validator.New()
-	config.LoadConfig("../.env")
+	config.LoadConfig()
 	db := psql.PsqlConnect()
 	defer db.Close()
 	nRepo := nasabah.NewNasabahRepository(db, ctx)

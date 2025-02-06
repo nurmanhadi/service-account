@@ -23,8 +23,8 @@ type config struct {
 
 var Set *config
 
-func LoadConfig(path string) {
-	err := godotenv.Load(path)
+func LoadConfig() {
+	err := godotenv.Load("./.env")
 	if err != nil {
 		panic(err)
 	}

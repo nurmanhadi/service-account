@@ -11,7 +11,7 @@ import (
 
 func TestRekeningRepository(t *testing.T) {
 	ctx := context.Background()
-	config.LoadConfig("../.env")
+	config.LoadConfig()
 	db := psql.PsqlConnect()
 	defer db.Close()
 	repo := rekening.NewRekeningRepository(db, ctx)

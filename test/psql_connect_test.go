@@ -7,7 +7,7 @@ import (
 )
 
 func TestPsqlConnect(t *testing.T) {
-	config.LoadConfig("../.env")
+	config.LoadConfig()
 	db := psql.PsqlConnect()
 	defer db.Close()
 }
